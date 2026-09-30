@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AquaAssist – Aquaculture Awareness for Kalavakunta</title>
+<style>
+:root{--deep:#0f4c5c;--pad:#4f7f32;--paper:#f6fbf8;--sand:#e9e4d2;--coral:#c8553d;--amber:#c98a12;--ink:#12262b;--card:#fff}
+*{box-sizing:border-box}
+body{margin:0;font-family:"Segoe UI","Noto Sans Telugu","Nirmala UI",system-ui,sans-serif;background:var(--paper);color:var(--ink);line-height:1.6}
+header{background:var(--deep);color:#fff;padding:14px 20px;display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:5}
+.logo{font-size:1.4rem;font-weight:700;letter-spacing:.3px}
+nav{display:flex;flex-wrap:wrap;gap:4px}
+nav button,.lang{background:transparent;color:#fff;border:1px solid rgba(255,255,255,.35);padding:6px 12px;border-radius:20px;cursor:pointer;font-size:.9rem}
+nav button.on{background:#fff;color:var(--deep);font-weight:600}
+button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid var(--amber);outline-offset:2px}
+.hero{background:linear-gradient(180deg,var(--deep),#1b6a7d);color:#fff;padding:48px 20px 60px}
+.hero div{max-width:820px;margin:auto}
+.hero h1{font-size:clamp(2rem,5vw,3.2rem);margin:0 0 10px;line-height:1.15}
+.hero p{font-size:1.1rem;max-width:60ch;opacity:.95}
+.wave{display:block;width:100%;height:36px;margin-top:-1px}
+main{max-width:900px;margin:auto;padding:24px 18px 60px}
+section{display:none}section.on{display:block}
+h2{color:var(--deep);margin-top:0}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}
+.card{background:var(--card);border:1px solid #d5e3dc;border-radius:12px;padding:16px}
+.card h3{margin:0 0 6px;color:var(--pad)}
+label{display:block;font-weight:600;margin:10px 0 4px}
+input,select,textarea{width:100%;padding:9px;border:1px solid #9db9ae;border-radius:8px;font:inherit;background:#fff}
+.btn{background:var(--deep);color:#fff;border:0;padding:10px 18px;border-radius:8px;font:inherit;font-weight:600;cursor:pointer;margin-top:12px}
+.btn.alt{background:var(--pad)}
+.res{margin-top:14px;padding:12px 14px;border-radius:8px;border-left:6px solid var(--pad);background:#eaf4e4}
+.res.warn{border-color:var(--amber);background:#fbf1d9}
+.res.bad{border-color:var(--coral);background:#fbe6e1}
+.row{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
+.bar{margin:10px 0}
+.bar .t{display:flex;justify-content:space-between;font-size:.95rem}
+.bar .b{height:16px;background:var(--sand);border-radius:8px;overflow:hidden}
+.bar .b i{display:block;height:100%;background:var(--deep);border-radius:8px}
+table{width:100%;border-collapse:collapse}
+td,th{padding:8px;border-bottom:1px solid #d5e3dc;text-align:left;vertical-align:top}
+.note{font-size:.85rem;color:#516a70}
+ul{padding-left:20px}
+footer{text-align:center;padding:20px;background:var(--sand);font-size:.9rem}
+@media (prefers-reduced-motion:no-preference){.bar .b i{transition:width .8s}}
+</style>
+</head>
+<body>
+<header>
+  <div class="logo">🐟 AquaAssist</div>
+  <nav id="nav"></nav>
+  <button class="lang" id="langBtn" aria-label="Switch language">తెలుగు</button>
+</header>
+
+<div class="hero"><div>
+  <h1 data-i="heroTitle"></h1>
+  <p data-i="heroText"></p>
+</div></div>
+<svg class="wave" viewBox="0 0 1200 36" preserveAspectRatio="none" aria-hidden="true"><path d="M0 0 C300 36 900 36 1200 0 L1200 0 L0 0Z" fill="#1b6a7d"/></svg>
+
+<main>
+<!-- LEARN -->
+<section id="learn" class="on">
+  <h2 data-i="learnH"></h2>
+  <div class="grid" id="learnGrid"></div>
+</section>
+
+<!-- WATER -->
+<section id="water">
+  <h2 data-i="waterH"></h2>
+  <div class="card">
+    <div class="row">
+      <div><label for="ph">pH</label><input id="ph" type="number" step="0.1" placeholder="e.g. 7.5"></div>
+      <div><label for="do">Dissolved oxygen (mg/L)</label><input id="do" type="number" step="0.1" placeholder="e.g. 5"></div>
+      <div><label for="temp">Temperature (°C)</label><input id="temp" type="number" step="0.5" placeholder="e.g. 29"></div>
+      <div><label for="clr">Water clarity (cm)</label><input id="clr" type="number" placeholder="e.g. 35"></div>
+    </div>
+    <button class="btn" id="chkBtn" data-i="check"></button>
+    <div id="waterOut"></div>
+    <p class="note" data-i="waterNote"></p>
+  </div>
+  <h3 data-i="disH"></h3>
+  <table>
+    <tr><th data-i="sym"></th><th data-i="act"></th></tr>
+    <tr><td>Fish gasping at the surface</td><td>Low oxygen: stop feeding, aerate or exchange water</td></tr>
+    <tr><td>Red spots, ulcers on body</td><td>Possible bacterial infection: consult fisheries officer, improve pond hygiene</td></tr>
+    <tr><td>White patches, rubbing on walls</td><td>Possible parasites: check water quality, seek expert advice</td></tr>
+    <tr><td>Loss of appetite, slow swimming</td><td>Reduce feed, test water, observe daily</td></tr>
+  </table>
+</section>
+
+<!-- FEED -->
+<section id="feed">
+  <h2 data-i="feedH"></h2>
+  <div class="card">
+    <div class="row">
+      <div><label for="fc" data-i="count"></label><input id="fc" type="number" placeholder="e.g. 5000"></div>
+      <div><label for="fw" data-i="wt"></label><input id="fw" type="number" placeholder="e.g. 250"></div>
+      <div><label for="fp" data-i="rate"></label>
+        <select id="fp"><option value="5">Fingerlings (5%)</option><option value="3" selected>Growing (3%)</option><option value="2">Adult (2%)</option></select></div>
+      <div><label for="fprice" data-i="price"></label><input id="fprice" type="number" placeholder="e.g. 40"></div>
+    </div>
+    <button class="btn alt" id="feedBtn" data-i="calc"></button>
+    <div id="feedOut"></div>
+    <p class="note" data-i="feedNote"></p>
+  </div>
+</section>
+
+<!-- SCHEMES -->
+<section id="schemes">
+  <h2 data-i="schH"></h2>
+  <div class="grid">
+    <div class="card"><h3>PM Matsya Sampada Yojana (PMMSY)</h3><p>Central scheme supporting pond construction, inputs, cages, training and marketing. Subsidy levels vary by category.</p></div>
+    <div class="card"><h3>Kisan Credit Card (Fisheries)</h3><p>Working-capital loans for fish farmers through banks at lower interest.</p></div>
+    <div class="card"><h3>State Fisheries Department</h3><p>Training camps, quality seed supply and technical visits. Ask for the Fisheries Development Officer (FDO).</p></div>
+    <div class="card"><h3>Fish Farmer Insurance</h3><p>Cover against losses from disease, floods and other risks. Ask your bank or fisheries office.</p></div>
+  </div>
+  <p class="note" data-i="schNote"></p>
+</section>
+
+<!-- DIARY -->
+<section id="diary">
+  <h2 data-i="diaryH"></h2>
+  <div class="card">
+    <div class="row">
+      <div><label for="dd" data-i="date"></label><input id="dd" type="date"></div>
+      <div><label for="dt" data-i="type"></label>
+        <select id="dt"><option>Feeding</option><option>Water test</option><option>Fish growth</option><option>Treatment</option><option>Harvest</option></select></div>
+    </div>
+    <label for="dn" data-i="notes"></label><textarea id="dn" rows="2" placeholder="e.g. Fed 12 kg, water clear"></textarea>
+    <button class="btn" id="dBtn" data-i="save"></button>
+  </div>
+  <table id="dTable" style="margin-top:14px"></table>
+  <button class="btn alt" id="dClear" data-i="clear"></button>
+</section>
+
+<!-- INSIGHTS -->
+<section id="insights">
+  <h2 data-i="insH"></h2>
+  <p class="note" data-i="insNote"></p>
+  <div class="card"><h3 data-i="prob"></h3><div id="probBars"></div></div>
+  <div class="card" style="margin-top:14px"><h3 data-i="ba"></h3><div id="baBars"></div></div>
+</section>
+
+<!-- HELP -->
+<section id="help">
+  <h2 data-i="helpH"></h2>
+  <div class="card">
+    <label for="hn" data-i="name"></label><input id="hn">
+    <label for="hq" data-i="question"></label><textarea id="hq" rows="3"></textarea>
+    <button class="btn" id="hBtn" data-i="send"></button>
+    <p class="note" data-i="helpNote"></p>
+  </div>
+</section>
+</main>
+
+<footer>Community Service Project · Awareness on Aquaculture · Kalavakunta Village · SVCE</footer>
+
+<script>
+/* ---------- Edit these ---------- */
+const EXPERT_WHATSAPP = "910000000000"; // country code + number of your faculty guide / fisheries officer
+// Replace with YOUR real survey numbers (percent of respondents)
+const PROBLEMS = [["Lack of scientific farming knowledge",72],["Unaware of government schemes",65],["High feed cost",58],["Fish disease",47],["Poor quality fish seed",44],["Market price / middlemen",40]];
+const BEFORE_AFTER = [["Pond preparation",30,78],["Water quality management",25,74],["Balanced feeding",35,80],["Disease prevention",28,70],["Government schemes",20,72]];
+/* -------------------------------- */
+
+const TXT = {
+ en:{nav:["Learn","Water Check","Feed Calculator","Schemes","Farm Diary","Survey Insights","Ask Expert"],
+  heroTitle:"Better fish farming, simple steps",heroText:"A free guide for the fish farmers of Kalavakunta: check your pond water, plan feed, find government support and keep records.",
+  learnH:"Learn scientific fish farming",waterH:"Pond water checker",check:"Check my pond",waterNote:"Ideal ranges: pH 6.5–8.5, oxygen above 5 mg/L, temperature 26–32 °C, clarity 30–40 cm. These are general guidelines for carp ponds.",
+  disH:"Common disease signs",sym:"What you see",act:"What to do",
+  feedH:"Daily feed calculator",count:"Number of fish",wt:"Average weight (g)",rate:"Growth stage",price:"Feed price (₹ per kg)",calc:"Calculate feed",feedNote:"Split the daily amount into 2 feedings. Reduce if feed is left uneaten.",
+  schH:"Government support",schNote:"Scheme details and subsidy rates change. Confirm with your local Fisheries Department office before applying.",
+  diaryH:"Farm diary",date:"Date",type:"Type",notes:"Notes",save:"Save entry",clear:"Clear all entries",
+  insH:"Survey insights",insNote:"Sample values shown. Replace them in the code with the results of your Kalavakunta survey.",prob:"Problems reported by farmers (%)",ba:"Awareness before vs after the programme (%)",
+  helpH:"Ask an expert",name:"Your name",question:"Your question",send:"Send on WhatsApp",helpNote:"Opens WhatsApp with your question ready to send."},
+ te:{nav:["నేర్చుకోండి","నీటి పరీక్ష","మేత లెక్క","ప్రభుత్వ పథకాలు","వ్యవసాయ డైరీ","సర్వే వివరాలు","నిపుణుడిని అడగండి"],
+  heroTitle:"మెరుగైన చేపల పెంపకం, సులభమైన దశలు",heroText:"కలవకుంట రైతుల కోసం ఉచిత మార్గదర్శి: చెరువు నీటిని పరీక్షించండి, మేతను లెక్కించండి, ప్రభుత్వ సహాయం తెలుసుకోండి, రికార్డులు ఉంచండి.",
+  learnH:"శాస్త్రీయ చేపల పెంపకం నేర్చుకోండి",waterH:"చెరువు నీటి పరీక్ష",check:"నా చెరువును పరీక్షించండి",waterNote:"సరైన పరిధులు: pH 6.5–8.5, ఆక్సిజన్ 5 mg/L పైన, ఉష్ణోగ్రత 26–32 °C, నీటి స్పష్టత 30–40 సెం.మీ.",
+  disH:"సాధారణ వ్యాధి లక్షణాలు",sym:"మీరు చూసేది",act:"ఏం చేయాలి",
+  feedH:"రోజువారీ మేత లెక్క",count:"చేపల సంఖ్య",wt:"సగటు బరువు (గ్రా)",rate:"పెరుగుదల దశ",price:"మేత ధర (₹/కిలో)",calc:"లెక్కించండి",feedNote:"రోజువారీ మేతను 2 సార్లుగా వేయండి. మిగిలిపోతే తగ్గించండి.",
+  schH:"ప్రభుత్వ సహాయం",schNote:"పథకాల వివరాలు మారవచ్చు. దరఖాస్తుకు ముందు మత్స్య శాఖ కార్యాలయంలో నిర్ధారించుకోండి.",
+  diaryH:"వ్యవసాయ డైరీ",date:"తేదీ",type:"రకం",notes:"వివరాలు",save:"నమోదు చేయండి",clear:"అన్నీ తొలగించండి",
+  insH:"సర్వే వివరాలు",insNote:"నమూనా విలువలు చూపబడ్డాయి. మీ సర్వే ఫలితాలతో కోడ్‌లో మార్చండి.",prob:"రైతులు తెలిపిన సమస్యలు (%)",ba:"కార్యక్రమానికి ముందు, తర్వాత అవగాహన (%)",
+  helpH:"నిపుణుడిని అడగండి",name:"మీ పేరు",question:"మీ ప్రశ్న",send:"WhatsApp లో పంపండి",helpNote:"మీ ప్రశ్నతో WhatsApp తెరుచుకుంటుంది."}
+};
+const LEARN = {
+ en:[["Pond preparation","Dry and plough the pond bottom, apply lime (about 200–250 kg/acre), fill with clean water and let plankton grow for 7–10 days before stocking."],
+     ["Healthy fish seed","Buy from a certified hatchery. Choose active, uniform-sized seed with no wounds. Acclimatise bags in pond water for 20–30 minutes."],
+     ["Balanced feeding","Feed at the same time daily, 2–5% of body weight depending on size. Avoid overfeeding: it spoils water and wastes money."],
+     ["Water quality","Check colour, smell and oxygen regularly. Green or light-brown water is healthy. Foul smell or fish at the surface means trouble."],
+     ["Disease prevention","Keep the pond clean, avoid overcrowding, remove dead fish quickly and watch fish behaviour every day."],
+     ["Marketing","Harvest at the right size, compare prices at several markets and try to sell in groups to reduce dependence on middlemen."]],
+ te:[["చెరువు సిద్ధం","చెరువు అడుగు ఆరబెట్టి దున్నండి, సున్నం వేయండి (ఎకరాకు సుమారు 200–250 కిలోలు), శుభ్రమైన నీరు నింపి 7–10 రోజులు ఆగాక చేప పిల్లలు వదలండి."],
+     ["ఆరోగ్యమైన చేప పిల్లలు","గుర్తింపు పొందిన హ్యాచరీ నుండి కొనండి. చురుకైన, ఒకే పరిమాణం గల పిల్లలను ఎంచుకోండి."],
+     ["సమతుల్య మేత","రోజూ ఒకే సమయంలో, శరీర బరువులో 2–5% మేత వేయండి. ఎక్కువ వేస్తే నీరు పాడవుతుంది."],
+     ["నీటి నాణ్యత","నీటి రంగు, వాసన, ఆక్సిజన్ తరచూ చూడండి. ఆకుపచ్చ లేదా లేత గోధుమ రంగు మంచిది."],
+     ["వ్యాధి నివారణ","చెరువును శుభ్రంగా ఉంచండి, ఎక్కువ చేపలు వేయవద్దు, చనిపోయినవి వెంటనే తీసేయండి."],
+     ["మార్కెటింగ్","సరైన పరిమాణంలో పట్టండి, వేర్వేరు మార్కెట్ల ధరలు పోల్చండి, కలిసి అమ్మితే దళారీల మీద ఆధారం తగ్గుతుంది."]]
+};
+const SECS=["learn","water","feed","schemes","diary","insights","help"];
+let lang="en";
+const $=id=>document.getElementById(id);
+
+function render(){
+  document.documentElement.lang=lang;
+  document.querySelectorAll("[data-i]").forEach(e=>e.textContent=TXT[lang][e.dataset.i]);
+  $("langBtn").textContent=lang==="en"?"తెలుగు":"English";
+  const cur=SECS.find(s=>$(s).classList.contains("on"));
+  $("nav").innerHTML="";
+  SECS.forEach((s,i)=>{const b=document.createElement("button");b.textContent=TXT[lang].nav[i];if(s===cur)b.className="on";b.onclick=()=>show(s);$("nav").appendChild(b)});
+  $("learnGrid").innerHTML=LEARN[lang].map(c=><div class="card"><h3>${c[0]}</h3><p>${c[1]}</p></div>).join("");
+  bars("probBars",PROBLEMS.map(p=>[p[0],p[1]]));
+  $("baBars").innerHTML=BEFORE_AFTER.map(r=><div class="bar"><div class="t"><span>${r[0]}</span><span>${r[1]}% → ${r[2]}%</span></div><div class="b" style="margin-bottom:3px"><i style="width:${r[1]}%;background:var(--sand);border:1px solid #b5ad92"></i></div><div class="b"><i style="width:${r[2]}%;background:var(--pad)"></i></div></div>).join("");
+  drawDiary();
+}
+function bars(id,d){$(id).innerHTML=d.map(r=><div class="bar"><div class="t"><span>${r[0]}</span><span>${r[1]}%</span></div><div class="b"><i style="width:${r[1]}%"></i></div></div>).join("")}
+function show(s){SECS.forEach(x=>$(x).classList.toggle("on",x===s));render();window.scrollTo({top:0,behavior:"smooth"})}
+$("langBtn").onclick=()=>{lang=lang==="en"?"te":"en";render()};
+
+/* Water checker */
+$("chkBtn").onclick=()=>{
+  const v={ph:parseFloat($("ph").value),o:parseFloat($("do").value),t:parseFloat($("temp").value),c:parseFloat($("clr").value)};
+  const msgs=[];let worst=0;
+  const rate=(ok,warn,text)=>{if(ok)return;worst=Math.max(worst,warn?1:2);msgs.push((warn?"⚠️ ":"❌ ")+text)};
+  if(!isNaN(v.ph)){const g=v.ph>=6.5&&v.ph<=8.5,w=v.ph>=6&&v.ph<=9;rate(g,w,pH ${v.ph}: ${v.ph<6.5?"too acidic, apply lime":"too alkaline, exchange part of the water"}.)}
+  if(!isNaN(v.o)){rate(v.o>=5,v.o>=3,Oxygen ${v.o} mg/L is low: reduce feed, aerate, avoid feeding in the evening.)}
+  if(!isNaN(v.t)){rate(v.t>=26&&v.t<=32,v.t>=22&&v.t<=35,Temperature ${v.t} °C is outside the best range: feed less and keep water depth adequate.)}
+  if(!isNaN(v.c)){rate(v.c>=30&&v.c<=40,v.c>=20&&v.c<=50,Clarity ${v.c} cm: ${v.c<30?"water too green or muddy, reduce feed and manure":"water too clear, fertilise lightly to grow plankton"}.)}
+  if(Object.values(v).every(isNaN)){$("waterOut").innerHTML='<div class="res warn">Enter at least one value.</div>';return}
+  const cls=["","warn","bad"][worst],title=["✅ Pond water looks good","⚠️ Needs attention","❌ Risky: act today"][worst];
+  $("waterOut").innerHTML=<div class="res ${cls}"><strong>${title}</strong>${msgs.length?"<ul><li>"+msgs.join("</li><li>")+"</li></ul>":"<p>Keep checking regularly.</p>"}</div>;
+};
+
+/* Feed calculator */
+$("feedBtn").onclick=()=>{
+  const n=+$("fc").value,w=+$("fw").value,p=+$("fp").value,pr=+$("fprice").value;
+  if(!n||!w){$("feedOut").innerHTML='<div class="res warn">Enter number of fish and average weight.</div>';return}
+  const biomass=n*w/1000,feed=biomass*p/100;
+  $("feedOut").innerHTML=<div class="res"><p>Total fish weight: <strong>${biomass.toFixed(1)} kg</strong></p><p>Feed per day: <strong>${feed.toFixed(2)} kg</strong> (${(feed/2).toFixed(2)} kg twice a day)</p>${pr?<p>Feed cost per day: <strong>₹${(feed*pr).toFixed(0)}</strong> | per 30 days: <strong>₹${(feed*pr*30).toFixed(0)}</strong></p>:""}</div>;
+};
+
+/* Farm diary (saved in this browser) */
+function load(){try{return JSON.parse(localStorage.getItem("aqua_diary")||"[]")}catch(e){return[]}}
+function saveD(a){try{localStorage.setItem("aqua_diary",JSON.stringify(a))}catch(e){}}
+function drawDiary(){
+  const a=load();
+  $("dTable").innerHTML=a.length?"<tr><th>Date</th><th>Type</th><th>Notes</th></tr>"+a.map(r=><tr><td>${esc(r.d)}</td><td>${esc(r.t)}</td><td>${esc(r.n)}</td></tr>).join(""):'<tr><td class="note">No entries yet. Add your first record above.</td></tr>';
+}
+function esc(s){return String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]))}
+$("dd").valueAsDate=new Date();
+$("dBtn").onclick=()=>{const a=load();a.unshift({d:$("dd").value,t:$("dt").value,n:$("dn").value});saveD(a);$("dn").value="";drawDiary()};
+$("dClear").onclick=()=>{if(confirm("Delete all diary entries?")){saveD([]);drawDiary()}};
+
+/* Ask expert */
+$("hBtn").onclick=()=>{
+  const q=$("hq").value.trim();if(!q){alert("Please type your question.");return}
+  const msg=encodeURIComponent(Hello, I am ${$("hn").value||"a farmer"} from Kalavakunta. ${q});
+  window.open(https://wa.me/${EXPERT_WHATSAPP}?text=${msg},"_blank");
+};
+
+render();
+</script>
+</body>
+</html>
